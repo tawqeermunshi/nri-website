@@ -1,0 +1,1588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Vistaar — Your Business in India. Fully Managed.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;0,900;1,400;1,700&family=Outfit:wght@300;400;500;600&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet"/>
+<style>
+/* ─── TOKENS ─────────────────────────────────────────── */
+:root {
+  --ivory:   #F6F3EE;
+  --ivory2:  #EFEBE3;
+  --paper:   #FAF8F5;
+  --ink:     #1A1814;
+  --ink2:    #2E2B26;
+  --ink3:    #6B6760;
+  --ink4:    #A8A49E;
+  --ember:   #C4622D;
+  --ember2:  #E07848;
+  --ember-t: rgba(196,98,45,0.08);
+  --line:    rgba(26,24,20,0.1);
+  --line2:   rgba(26,24,20,0.05);
+  --white:   #FFFFFF;
+  --r: 0px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Outfit', sans-serif;
+  font-weight: 400;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* Grain overlay */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 9000;
+  pointer-events: none;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+}
+
+/* ─── CURSOR ─────────────────────────────────────────── */
+#cur { position: fixed; width: 8px; height: 8px; background: var(--ember); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); transition: width .3s, height .3s; }
+#cur-o { position: fixed; width: 32px; height: 32px; border: 1px solid rgba(196,98,45,.4); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%,-50%); transition: all .18s ease; }
+body:hover #cur { opacity: 1; }
+
+/* ─── PROGRESS BAR ───────────────────────────────────── */
+#progress { position: fixed; top: 0; left: 0; height: 2px; background: var(--ember); z-index: 9997; transition: width .05s linear; width: 0; }
+
+/* ─── NAV ────────────────────────────────────────────── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 900;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1.75rem 3.5rem;
+  transition: all .5s ease;
+}
+nav.opaque {
+  background: rgba(246,243,238,0.88);
+  backdrop-filter: blur(24px) saturate(1.4);
+  padding: 1.25rem 3.5rem;
+  border-bottom: 1px solid var(--line2);
+}
+.nav-logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.35rem; font-weight: 700; letter-spacing: .01em;
+  color: var(--ink); text-decoration: none;
+}
+.nav-logo span { color: var(--ember); }
+.nav-links { display: flex; align-items: center; gap: 2.5rem; }
+.nav-links a {
+  font-size: .78rem; font-weight: 500; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--ink3); text-decoration: none;
+  transition: color .2s;
+}
+.nav-links a:hover { color: var(--ink); }
+.nav-pill {
+  background: var(--ink); color: var(--ivory);
+  padding: .55rem 1.4rem; border-radius: 100px;
+  font-size: .78rem; font-weight: 500; letter-spacing: .04em;
+  text-decoration: none; transition: background .25s, transform .25s;
+}
+.nav-pill:hover { background: var(--ember); transform: translateY(-1px); color: var(--white) !important; }
+
+/* ─── HERO ───────────────────────────────────────────── */
+.hero {
+  min-height: 100svh;
+  display: grid; grid-template-rows: 1fr auto;
+  padding: 0 3.5rem;
+  position: relative; overflow: hidden;
+}
+.hero-bg-circle {
+  position: absolute;
+  width: 700px; height: 700px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(196,98,45,.07) 0%, transparent 70%);
+  right: -100px; top: 50%; transform: translateY(-50%);
+  pointer-events: none;
+}
+.hero-bg-line {
+  position: absolute; left: 0; right: 0;
+  height: 1px; background: var(--line2);
+  pointer-events: none;
+}
+.hero-center {
+  display: flex; flex-direction: column; justify-content: center;
+  padding-top: 8rem;
+}
+.hero-eyebrow {
+  display: flex; align-items: center; gap: .75rem;
+  font-size: .72rem; font-weight: 500; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--ember);
+  margin-bottom: 2.5rem;
+  opacity: 0; animation: riseIn .8s ease .1s forwards;
+}
+.hero-eyebrow-line { width: 28px; height: 1px; background: var(--ember); }
+
+/* Cinematic headline — the personality switch */
+.hero-hl {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(3.2rem, 6.5vw, 7rem);
+  font-weight: 400; line-height: 1.08;
+  letter-spacing: -.02em; color: var(--ink);
+  max-width: 920px;
+  opacity: 0; animation: riseIn 1s ease .25s forwards;
+}
+.hero-hl em { color: var(--ember); font-style: italic; }
+.hero-hl .hl-muted { color: var(--ink4); }
+
+.hero-sub {
+  margin-top: 2.25rem; max-width: 520px;
+  font-size: 1.05rem; line-height: 1.75; color: var(--ink3); font-weight: 300;
+  opacity: 0; animation: riseIn .9s ease .45s forwards;
+}
+
+.hero-actions {
+  display: flex; align-items: center; gap: 1.5rem; margin-top: 3rem;
+  opacity: 0; animation: riseIn .9s ease .65s forwards;
+}
+.btn-ember {
+  background: var(--ember); color: var(--white);
+  padding: .85rem 2.2rem; border-radius: 100px;
+  font-size: .9rem; font-weight: 500; letter-spacing: .02em;
+  text-decoration: none; transition: all .3s ease; display: inline-block;
+  box-shadow: 0 8px 32px rgba(196,98,45,.25);
+}
+.btn-ember:hover { background: var(--ink); box-shadow: 0 12px 40px rgba(26,24,20,.2); transform: translateY(-2px); }
+.btn-ghost {
+  color: var(--ink3); font-size: .88rem; text-decoration: none;
+  display: flex; align-items: center; gap: .5rem;
+  transition: color .2s; font-weight: 400;
+}
+.btn-ghost:hover { color: var(--ink); }
+.btn-ghost .arr { transition: transform .25s; }
+.btn-ghost:hover .arr { transform: translateX(4px); }
+
+/* Persona switcher */
+.persona-bar {
+  display: flex; gap: 0; padding: 2rem 0;
+  border-top: 1px solid var(--line2);
+  opacity: 0; animation: riseIn .9s ease .85s forwards;
+}
+.persona-tab {
+  flex: 1; padding: 1.25rem 1.5rem; cursor: pointer;
+  border-left: 1px solid var(--line2);
+  transition: background .3s; position: relative;
+}
+.persona-tab:first-child { border-left: none; }
+.persona-tab:hover { background: var(--ivory2); }
+.persona-tab.active { background: var(--ivory); }
+.persona-tab.active::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: var(--ember);
+}
+.pt-flag { font-size: 1.1rem; margin-bottom: .4rem; }
+.pt-label { font-size: .72rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--ink2); margin-bottom: .2rem; }
+.pt-loc { font-size: .75rem; color: var(--ink4); }
+.pt-msg { font-size: .78rem; color: var(--ink3); margin-top: .6rem; line-height: 1.5; display: none; }
+.persona-tab.active .pt-msg { display: block; }
+
+/* ─── STAT STRIP ─────────────────────────────────────── */
+.stat-strip {
+  background: var(--ink);
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  border-top: 1px solid rgba(255,255,255,.06);
+}
+.stat-cell {
+  padding: 3rem 2.5rem; border-right: 1px solid rgba(255,255,255,.07);
+  position: relative; overflow: hidden;
+}
+.stat-cell:last-child { border-right: none; }
+.stat-cell::after {
+  content: ''; position: absolute; bottom: 0; left: 0; height: 2px; width: 0;
+  background: var(--ember); transition: width .6s ease;
+}
+.stat-cell:hover::after { width: 100%; }
+.sc-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 3rem; font-weight: 400; color: var(--ivory);
+  line-height: 1; margin-bottom: .4rem;
+}
+.sc-num sup { font-size: 1.2rem; vertical-align: super; }
+.sc-label { font-size: .75rem; color: rgba(246,243,238,.4); letter-spacing: .06em; line-height: 1.5; }
+
+/* ─── PROBLEM (CINEMATIC) ─────────────────────────────── */
+.cinematic-problem {
+  min-height: 100svh; display: flex; align-items: center;
+  background: var(--ivory); position: relative; overflow: hidden;
+  padding: 6rem 3.5rem;
+}
+.cp-bg-text {
+  position: absolute; right: -2rem; top: 50%; transform: translateY(-50%);
+  font-family: 'Playfair Display', serif;
+  font-size: 22vw; font-weight: 900; color: rgba(26,24,20,.03);
+  pointer-events: none; user-select: none; line-height: 1; white-space: nowrap;
+}
+.cp-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 8rem; align-items: center; width: 100%; position: relative; }
+.cp-left {}
+.section-tag {
+  font-size: .7rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--ember); margin-bottom: 1.5rem;
+  display: flex; align-items: center; gap: .6rem;
+}
+.section-tag::before { content: ''; width: 20px; height: 1px; background: var(--ember); }
+.cp-hl {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.2rem, 3.5vw, 3.5rem);
+  font-weight: 400; line-height: 1.15; color: var(--ink);
+}
+.cp-hl em { font-style: italic; color: var(--ember); }
+.cp-quote {
+  margin-top: 3rem; padding: 2rem 2rem 2rem 2.5rem;
+  border-left: 3px solid var(--ember);
+  background: var(--white); border-radius: 0 8px 8px 0;
+}
+.cp-quote blockquote {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.15rem; font-style: italic; font-weight: 400;
+  line-height: 1.65; color: var(--ink2); margin-bottom: 1rem;
+}
+.cp-quote-author { font-size: .76rem; color: var(--ink4); font-weight: 500; }
+.cp-right { display: flex; flex-direction: column; gap: 0; }
+.pain-item {
+  padding: 1.75rem 0; border-bottom: 1px solid var(--line);
+  display: grid; grid-template-columns: 2.5rem 1fr; gap: 1.25rem;
+  transition: padding-left .3s;
+}
+.pain-item:first-child { border-top: 1px solid var(--line); }
+.pain-item:hover { padding-left: .75rem; }
+.pain-num {
+  font-family: 'DM Mono', monospace; font-size: .78rem;
+  color: var(--ink4); padding-top: .2rem;
+}
+.pain-title { font-size: .95rem; font-weight: 600; margin-bottom: .4rem; color: var(--ink); }
+.pain-p { font-size: .82rem; color: var(--ink3); line-height: 1.7; }
+
+/* ─── BUSINESSES ──────────────────────────────────────── */
+.businesses { padding: 7rem 0; overflow: hidden; background: var(--paper); }
+.biz-head { padding: 0 3.5rem; margin-bottom: 4rem; display: flex; justify-content: space-between; align-items: flex-end; }
+.biz-hl {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.2rem, 3.5vw, 3.8rem);
+  font-weight: 400; line-height: 1.1; color: var(--ink);
+}
+.biz-hl em { font-style: italic; color: var(--ember); }
+.biz-sub { max-width: 380px; font-size: .85rem; color: var(--ink3); line-height: 1.75; }
+
+/* Horizontal scroll track */
+.biz-track-wrap { position: relative; }
+.biz-track {
+  display: flex; gap: 1.5rem;
+  padding: 0 3.5rem; overflow-x: auto; scroll-snap-type: x mandatory;
+  scrollbar-width: none; cursor: grab;
+}
+.biz-track::-webkit-scrollbar { display: none; }
+.biz-track:active { cursor: grabbing; }
+
+.biz-card {
+  flex: 0 0 320px; scroll-snap-align: start;
+  background: var(--white); border: 1px solid var(--line2);
+  border-radius: 16px; padding: 2.25rem 2rem;
+  display: flex; flex-direction: column;
+  transition: transform .35s ease, box-shadow .35s ease, border-color .35s;
+  position: relative; overflow: hidden;
+}
+.biz-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--ember), var(--ember2));
+  transform: scaleX(0); transform-origin: left; transition: transform .4s ease;
+}
+.biz-card:hover::before { transform: scaleX(1); }
+.biz-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 24px 60px rgba(26,24,20,.09);
+  border-color: rgba(26,24,20,.12);
+}
+.bc-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; }
+.bc-icon { font-size: 2.2rem; line-height: 1; }
+.bc-badge {
+  font-size: .62rem; font-weight: 600; letter-spacing: .08em;
+  text-transform: uppercase; padding: .25rem .65rem;
+  border-radius: 100px;
+}
+.bc-badge.easy { background: rgba(42,125,79,.1); color: #2a7d4f; }
+.bc-badge.med  { background: rgba(196,98,45,.1); color: var(--ember); }
+.bc-badge.high { background: rgba(100,40,20,.1); color: #7a3010; }
+.bc-name { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 500; margin-bottom: .6rem; }
+.bc-desc { font-size: .8rem; color: var(--ink3); line-height: 1.7; margin-bottom: 1.5rem; flex-grow: 1; }
+.bc-metrics { display: flex; gap: 1.5rem; padding: 1rem 0; border-top: 1px solid var(--line2); border-bottom: 1px solid var(--line2); margin-bottom: 1.25rem; }
+.bc-m-val { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--ember); display: block; margin-bottom: .15rem; }
+.bc-m-label { font-size: .62rem; color: var(--ink4); text-transform: uppercase; letter-spacing: .06em; }
+.bc-tech { display: flex; flex-direction: column; gap: .35rem; }
+.bc-tech-label { font-size: .62rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--ink4); margin-bottom: .25rem; }
+.bc-tag {
+  font-size: .72rem; color: var(--ink3); padding: .3rem .7rem;
+  background: var(--ivory); border-radius: 6px;
+  display: flex; align-items: center; gap: .4rem;
+}
+
+.biz-scroll-hint {
+  padding: 1.5rem 3.5rem 0; display: flex; align-items: center; gap: .75rem;
+  font-size: .75rem; color: var(--ink4);
+}
+.biz-scroll-hint span { font-size: 1rem; }
+
+/* ─── SETUP SERVICES ──────────────────────────────────── */
+.setup-section { background: var(--ivory); padding: 7rem 3.5rem; }
+.setup-intro { display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; margin-bottom: 5rem; align-items: end; }
+.setup-hl { font-family: 'Playfair Display', serif; font-size: clamp(2.2rem,3.5vw,3.8rem); font-weight: 400; line-height: 1.1; }
+.setup-hl em { font-style: italic; color: var(--ember); }
+.setup-body { font-size: .88rem; color: var(--ink3); line-height: 1.85; max-width: 440px; }
+.setup-phase-label { font-family: 'DM Mono', monospace; font-size: .72rem; color: var(--ember); letter-spacing: .1em; margin-bottom: 1rem; }
+
+.services-list { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--line); }
+.svc {
+  background: var(--ivory); padding: 2.25rem 2rem;
+  transition: background .3s; position: relative; overflow: hidden;
+}
+.svc:hover { background: var(--white); }
+.svc::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
+  background: var(--ember); transform: scaleX(0); transform-origin: left; transition: transform .4s;
+}
+.svc:hover::after { transform: scaleX(1); }
+.svc-num { font-family: 'DM Mono', monospace; font-size: .7rem; color: var(--ink4); margin-bottom: 1.25rem; }
+.svc-icon { font-size: 1.75rem; margin-bottom: 1rem; }
+.svc-name { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 500; margin-bottom: .6rem; color: var(--ink); }
+.svc-p { font-size: .78rem; color: var(--ink3); line-height: 1.7; }
+
+/* ─── ONGOING / DASHBOARD ────────────────────────────── */
+.ongoing-section { background: var(--paper); padding: 7rem 3.5rem; }
+.ongoing-inner { display: grid; grid-template-columns: 1fr 1.05fr; gap: 6rem; align-items: start; }
+
+.ongoing-features { display: flex; flex-direction: column; gap: 1.5rem; margin-top: 3rem; }
+.of-item {
+  display: flex; gap: 1.5rem; padding: 1.75rem;
+  background: var(--white); border: 1px solid var(--line2);
+  border-radius: 12px; transition: border-color .3s, transform .3s;
+}
+.of-item:hover { border-color: rgba(196,98,45,.3); transform: translateX(6px); }
+.of-icon { font-size: 1.6rem; width: 44px; height: 44px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+.of-title { font-size: .92rem; font-weight: 600; margin-bottom: .35rem; color: var(--ink); }
+.of-p { font-size: .78rem; color: var(--ink3); line-height: 1.65; }
+
+/* Apple-style dashboard */
+.dash-wrap { position: sticky; top: 7rem; }
+.dash {
+  background: var(--white); border-radius: 20px;
+  border: 1px solid var(--line2);
+  overflow: hidden;
+  box-shadow: 0 32px 80px rgba(26,24,20,.08), 0 8px 24px rgba(26,24,20,.04);
+}
+.dash-topbar {
+  background: var(--ink); padding: 1.25rem 1.75rem;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.dash-tb-title { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--ivory); font-weight: 400; }
+.dash-live { display: flex; align-items: center; gap: .45rem; font-size: .68rem; color: #6ee7b7; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; }
+.dash-live-dot { width: 6px; height: 6px; background: #6ee7b7; border-radius: 50%; animation: livePulse 1.8s ease-in-out infinite; }
+.dash-body { padding: 1.5rem; }
+.dash-kpis { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: .75rem; margin-bottom: 1.25rem; }
+.dk {
+  background: var(--ivory); border-radius: 10px; padding: 1rem;
+  transition: background .2s;
+}
+.dk:hover { background: var(--ivory2); }
+.dk-label { font-size: .6rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink4); margin-bottom: .5rem; }
+.dk-val { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--ink); font-weight: 500; margin-bottom: .2rem; }
+.dk-delta { font-size: .65rem; font-weight: 500; }
+.dk-delta.up { color: #2a7d4f; } .dk-delta.warn { color: var(--ember); } .dk-delta.down { color: #c44a2d; }
+
+/* SVG sparkline chart */
+.dash-chart { background: var(--ivory); border-radius: 10px; padding: 1.1rem; margin-bottom: 1rem; }
+.dc-label { font-size: .62rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink4); margin-bottom: .75rem; }
+.dc-svg { width: 100%; height: 60px; overflow: visible; }
+
+.dash-list { display: flex; flex-direction: column; gap: 0; }
+.dl-row { display: flex; justify-content: space-between; align-items: center; padding: .65rem 0; border-bottom: 1px solid var(--line2); }
+.dl-row:last-child { border-bottom: none; }
+.dl-key { font-size: .75rem; color: var(--ink3); }
+.dl-val { font-size: .75rem; font-weight: 500; color: var(--ink2); }
+.dl-pill { font-size: .6rem; font-weight: 600; padding: .2rem .55rem; border-radius: 100px; }
+.dl-pill.ok { background: rgba(42,125,79,.1); color: #2a7d4f; }
+.dl-pill.warn { background: rgba(196,98,45,.1); color: var(--ember); }
+
+/* ─── HOW IT WORKS ────────────────────────────────────── */
+.how-section {
+  min-height: 80svh; background: var(--ink); padding: 7rem 3.5rem;
+  display: flex; align-items: center;
+}
+.how-inner { display: grid; grid-template-columns: 1fr 1.2fr; gap: 8rem; width: 100%; align-items: start; }
+.how-hl { font-family: 'Playfair Display', serif; font-size: clamp(2.2rem,3.5vw,3.8rem); font-weight: 400; color: var(--ivory); line-height: 1.1; }
+.how-hl em { font-style: italic; color: var(--ember2); }
+.how-sub { margin-top: 1.5rem; font-size: .88rem; color: rgba(246,243,238,.5); line-height: 1.8; max-width: 380px; }
+.how-guarantee {
+  margin-top: 3rem; padding: 2rem;
+  border: 1px solid rgba(196,98,45,.35); border-radius: 12px;
+  background: rgba(196,98,45,.06);
+}
+.hg-title { font-size: .9rem; font-weight: 600; color: var(--ivory); margin-bottom: .5rem; display: flex; align-items: center; gap: .6rem; }
+.hg-p { font-size: .8rem; color: rgba(246,243,238,.55); line-height: 1.7; }
+
+.phases { display: flex; flex-direction: column; }
+.phase {
+  display: grid; grid-template-columns: 3rem 1fr;
+  gap: 1.5rem; padding: 2rem 0;
+  border-bottom: 1px solid rgba(255,255,255,.07);
+}
+.phase:last-child { border-bottom: none; }
+.phase-col { display: flex; flex-direction: column; align-items: center; }
+.ph-num {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid rgba(196,98,45,.4);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'DM Mono', monospace; font-size: .8rem;
+  color: var(--ember2); flex-shrink: 0;
+}
+.ph-line { width: 1px; flex: 1; background: rgba(255,255,255,.06); margin-top: .5rem; }
+.phase:last-child .ph-line { display: none; }
+.ph-content { padding-top: .4rem; }
+.ph-title { font-size: .95rem; font-weight: 600; color: var(--ivory); margin-bottom: .4rem; }
+.ph-p { font-size: .8rem; color: rgba(246,243,238,.5); line-height: 1.7; }
+.ph-tag { margin-top: .65rem; font-family: 'DM Mono', monospace; font-size: .65rem; color: var(--ember2); opacity: .8; letter-spacing: .06em; }
+
+/* ─── TESTIMONIALS ────────────────────────────────────── */
+.testimonials-section { background: var(--ivory); padding: 7rem 0; overflow: hidden; }
+.ts-head { padding: 0 3.5rem; margin-bottom: 4rem; }
+.ts-hl { font-family: 'Playfair Display', serif; font-size: clamp(2.2rem,3.5vw,3.8rem); font-weight: 400; line-height: 1.1; }
+.ts-hl em { font-style: italic; color: var(--ember); }
+
+.ts-slider { position: relative; padding: 0 3.5rem; }
+.ts-track { display: flex; gap: 1.5rem; overflow: hidden; }
+.ts-card {
+  flex: 0 0 100%; background: var(--white); border-radius: 16px;
+  padding: 3.5rem; border: 1px solid var(--line2);
+  display: none; flex-direction: column;
+}
+.ts-card.active { display: flex; animation: fadeSlide .5s ease forwards; }
+.ts-quote {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.2rem, 1.8vw, 1.6rem);
+  font-weight: 400; font-style: italic;
+  line-height: 1.65; color: var(--ink2); margin-bottom: 2.5rem; flex-grow: 1;
+}
+.ts-footer { display: flex; justify-content: space-between; align-items: flex-end; }
+.ts-author-info { display: flex; align-items: center; gap: 1rem; }
+.ts-avatar {
+  width: 48px; height: 48px; border-radius: 50%;
+  background: var(--ivory2); border: 2px solid var(--line);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--ink2); font-weight: 700;
+}
+.ts-name { font-size: .88rem; font-weight: 600; color: var(--ink); }
+.ts-loc { font-size: .75rem; color: var(--ink4); margin-top: .15rem; }
+.ts-stars { color: var(--ember); font-size: .85rem; }
+.ts-controls { padding: 2rem 3.5rem 0; display: flex; align-items: center; gap: 1rem; }
+.ts-btn {
+  width: 44px; height: 44px; border-radius: 50%;
+  border: 1px solid var(--line); background: var(--white);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; color: var(--ink3); transition: all .25s;
+}
+.ts-btn:hover { background: var(--ink); color: var(--ivory); border-color: var(--ink); }
+.ts-dots { display: flex; gap: .5rem; margin-left: .5rem; }
+.ts-dot {
+  width: 6px; height: 6px; border-radius: 50%; background: var(--line);
+  cursor: pointer; transition: background .3s;
+}
+.ts-dot.active { background: var(--ember); }
+
+/* ─── PRICING ─────────────────────────────────────────── */
+.pricing-section { background: var(--paper); padding: 7rem 3.5rem; }
+.pricing-hl { font-family: 'Playfair Display', serif; font-size: clamp(2.2rem,3.5vw,3.8rem); font-weight: 400; line-height: 1.1; margin-bottom: 1rem; }
+.pricing-hl em { font-style: italic; color: var(--ember); }
+.pricing-sub { font-size: .88rem; color: var(--ink3); line-height: 1.75; max-width: 480px; margin-bottom: 4rem; }
+.pc-carousel-wrap { position: relative; overflow: hidden; }
+.pc-carousel { display: flex; transition: transform .5s cubic-bezier(.4,0,.2,1); will-change: transform; }
+.pc-slide { flex: 0 0 100%; max-width: 540px; margin: 0 auto; }
+.pc-controls { display: flex; align-items: center; justify-content: center; gap: 1rem; margin-top: 2.5rem; }
+.pc-btn { width: 44px; height: 44px; border-radius: 50%; border: 1.5px solid var(--line); background: var(--white); cursor: pointer; font-size: 1rem; color: var(--ink3); display: flex; align-items: center; justify-content: center; transition: all .25s; font-family: inherit; }
+.pc-btn:hover { background: var(--ink); color: var(--ivory); border-color: var(--ink); }
+.pc-dots { display: flex; gap: .5rem; }
+.pc-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--line); cursor: pointer; transition: background .3s, transform .3s; }
+.pc-dot.active { background: var(--ember); transform: scale(1.3); }
+.pc {
+  background: var(--white); border: 1px solid var(--line2);
+  border-radius: 16px; padding: 2.5rem 2.25rem;
+  transition: transform .35s, box-shadow .35s; position: relative; overflow: hidden;
+}
+.pc:hover { transform: translateY(-6px); box-shadow: 0 24px 60px rgba(26,24,20,.09); }
+.pc.featured { background: var(--ink); border-color: transparent; }
+.pc-badge {
+  position: absolute; top: 1.75rem; right: 1.75rem;
+  background: var(--ember); color: var(--white);
+  font-size: .62rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+  padding: .25rem .75rem; border-radius: 100px;
+}
+.pc-tier { font-size: .7rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--ink4); margin-bottom: .75rem; }
+.pc.featured .pc-tier { color: rgba(246,243,238,.4); }
+.pc-name { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 400; margin-bottom: .5rem; }
+.pc.featured .pc-name { color: var(--ivory); }
+.pc-desc { font-size: .8rem; color: var(--ink3); line-height: 1.65; margin-bottom: 2rem; }
+.pc.featured .pc-desc { color: rgba(246,243,238,.5); }
+.pc-price { margin-bottom: 2rem; }
+.pc-from { display: block; font-size: .72rem; color: var(--ink4); margin-bottom: .25rem; }
+.pc.featured .pc-from { color: rgba(246,243,238,.35); }
+.pc-amt { font-family: 'Playfair Display', serif; font-size: 2.6rem; font-weight: 400; color: var(--ink); line-height: 1; }
+.pc.featured .pc-amt { color: var(--ivory); }
+.pc-per { font-size: .88rem; color: var(--ink4); }
+.pc.featured .pc-per { color: rgba(246,243,238,.35); }
+.pc-sub { display: block; margin-top: .35rem; font-size: .75rem; color: var(--ink4); }
+.pc.featured .pc-sub { color: rgba(246,243,238,.35); }
+.pc-features { list-style: none; display: flex; flex-direction: column; gap: .65rem; margin-bottom: 2rem; }
+.pc-features li { font-size: .8rem; color: var(--ink3); display: flex; gap: .65rem; align-items: flex-start; line-height: 1.5; }
+.pc.featured .pc-features li { color: rgba(246,243,238,.6); }
+.pc-features li::before { content: '✓'; color: var(--ember); font-size: .78rem; flex-shrink: 0; margin-top: .05rem; font-weight: 600; }
+.pc-cta {
+  display: block; width: 100%; padding: .9rem; text-align: center;
+  border-radius: 100px; font-size: .85rem; font-weight: 600;
+  text-decoration: none; transition: all .25s; cursor: pointer;
+  border: none; font-family: 'Outfit', sans-serif;
+}
+.pc-cta.outline { border: 1.5px solid var(--line); color: var(--ink); background: transparent; }
+.pc-cta.outline:hover { border-color: var(--ember); color: var(--ember); }
+.pc-cta.solid { background: var(--ember); color: var(--white); box-shadow: 0 8px 24px rgba(196,98,45,.25); }
+.pc-cta.solid:hover { background: var(--ember2); }
+.pc-cta.inv { background: var(--ivory); color: var(--ink); }
+.pc-cta.inv:hover { background: var(--ivory2); }
+
+/* ─── TRUST ───────────────────────────────────────────── */
+.trust-section { background: var(--ivory); padding: 7rem 3.5rem; }
+.trust-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: start; }
+.trust-hl { font-family: 'Playfair Display', serif; font-size: clamp(2.2rem,3.5vw,3.8rem); font-weight: 400; line-height: 1.1; margin-bottom: 1.5rem; }
+.trust-hl em { font-style: italic; color: var(--ember); }
+.trust-p { font-size: .88rem; color: var(--ink3); line-height: 1.85; margin-bottom: 3rem; max-width: 440px; }
+.creds { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.cred {
+  background: var(--white); border: 1px solid var(--line2);
+  border-radius: 12px; padding: 1.5rem;
+  transition: border-color .3s, transform .3s;
+}
+.cred:hover { border-color: rgba(196,98,45,.25); transform: translateY(-3px); }
+.cred-icon { font-size: 1.5rem; margin-bottom: .75rem; }
+.cred-title { font-size: .85rem; font-weight: 600; margin-bottom: .35rem; }
+.cred-p { font-size: .75rem; color: var(--ink4); line-height: 1.6; }
+.trust-right { display: flex; flex-direction: column; gap: 1rem; }
+.tr-item {
+  background: var(--white); border: 1px solid var(--line2); border-radius: 12px;
+  padding: 2rem; transition: border-color .3s;
+}
+.tr-item:hover { border-color: rgba(196,98,45,.2); }
+.tr-q {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem; font-style: italic; line-height: 1.65;
+  color: var(--ink2); margin-bottom: 1rem; font-weight: 400;
+}
+.tr-who { display: flex; align-items: center; gap: .75rem; }
+.tr-av {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: var(--ivory2); font-family: 'Playfair Display', serif;
+  font-size: .8rem; color: var(--ink3); font-weight: 700;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.tr-n { font-size: .8rem; font-weight: 600; }
+.tr-l { font-size: .7rem; color: var(--ink4); margin-top: .1rem; }
+.tr-stars { color: var(--ember); font-size: .7rem; margin-left: auto; }
+
+/* ─── FAQ ─────────────────────────────────────────────── */
+.faq-section { background: var(--paper); padding: 7rem 3.5rem; }
+.faq-wrap { display: grid; grid-template-columns: 1fr 1.4fr; gap: 8rem; align-items: start; }
+.faq-hl { font-family: 'Playfair Display', serif; font-size: clamp(2.2rem,3.5vw,3.8rem); font-weight: 400; line-height: 1.1; position: sticky; top: 7rem; }
+.faq-hl em { font-style: italic; color: var(--ember); }
+.faq-hl p { font-size: .85rem; color: var(--ink3); line-height: 1.8; margin-top: 1.25rem; font-family: 'Outfit', sans-serif; font-weight: 300; font-style: normal; }
+.faqs { display: flex; flex-direction: column; }
+.faq-it { border-bottom: 1px solid var(--line); }
+.faq-it:first-child { border-top: 1px solid var(--line); }
+.fq {
+  width: 100%; background: none; border: none; padding: 1.6rem 0;
+  display: flex; justify-content: space-between; align-items: center;
+  font-family: 'Outfit', sans-serif; font-size: .92rem; font-weight: 600;
+  color: var(--ink); cursor: pointer; text-align: left; gap: 1.5rem;
+  transition: color .2s;
+}
+.fq:hover { color: var(--ember); }
+.fq-ico {
+  width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid var(--line);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; line-height: 1; color: var(--ink4); flex-shrink: 0;
+  transition: all .3s; font-weight: 300;
+}
+.faq-it.open .fq-ico { background: var(--ember); border-color: var(--ember); color: var(--white); transform: rotate(45deg); }
+.fa { font-size: .83rem; color: var(--ink3); line-height: 1.8; padding-bottom: 1.6rem; display: none; }
+.faq-it.open .fa { display: block; }
+
+/* ─── FINAL CTA ───────────────────────────────────────── */
+.final-cta {
+  background: var(--ink); padding: 10rem 3.5rem;
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  position: relative; overflow: hidden;
+}
+.final-cta::before {
+  content: '';
+  position: absolute; width: 900px; height: 900px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(196,98,45,.1) 0%, transparent 65%);
+  top: 50%; left: 50%; transform: translate(-50%,-50%);
+  pointer-events: none;
+}
+.fc-tag { font-size: .7rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--ember2); margin-bottom: 2rem; display: flex; align-items: center; gap: .6rem; justify-content: center; }
+.fc-tag::before, .fc-tag::after { content: ''; width: 24px; height: 1px; background: var(--ember2); }
+.fc-hl {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.5rem, 5vw, 5.5rem);
+  font-weight: 400; color: var(--ivory); line-height: 1.1;
+  position: relative; margin-bottom: 1.5rem;
+}
+.fc-hl em { font-style: italic; color: var(--ember2); }
+.fc-p { font-size: 1rem; color: rgba(246,243,238,.5); max-width: 440px; line-height: 1.8; margin-bottom: 3rem; position: relative; }
+.fc-form {
+  display: flex; gap: 0; max-width: 440px; width: 100%; position: relative;
+  border: 1px solid rgba(246,243,238,.15); border-radius: 100px;
+  background: rgba(246,243,238,.06); overflow: hidden;
+  backdrop-filter: blur(10px);
+}
+.fc-form input {
+  flex: 1; background: none; border: none; outline: none;
+  padding: .9rem 1.5rem; font-family: 'Outfit', sans-serif;
+  font-size: .88rem; color: var(--ivory);
+}
+.fc-form input::placeholder { color: rgba(246,243,238,.3); }
+.fc-form button {
+  background: var(--ember); color: var(--white); border: none;
+  padding: .9rem 1.75rem; font-family: 'Outfit', sans-serif;
+  font-size: .85rem; font-weight: 600; cursor: pointer;
+  border-radius: 0 100px 100px 0; white-space: nowrap;
+  transition: background .25s;
+}
+.fc-form button:hover { background: var(--ember2); }
+.fc-alt { margin-top: 1.25rem; font-size: .78rem; color: rgba(246,243,238,.3); position: relative; }
+.fc-alt a { color: rgba(246,243,238,.5); text-decoration: none; border-bottom: 1px solid rgba(246,243,238,.2); transition: color .2s; }
+.fc-alt a:hover { color: var(--ivory); }
+
+/* ─── FOOTER ──────────────────────────────────────────── */
+footer { background: var(--ink2); padding: 4rem 3.5rem 2rem; border-top: 1px solid rgba(255,255,255,.06); }
+.ft { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 4rem; margin-bottom: 3rem; }
+.ft-brand .nav-logo { display: block; margin-bottom: 1rem; color: var(--ivory); }
+.ft-brand p { font-size: .78rem; color: rgba(246,243,238,.4); line-height: 1.75; max-width: 250px; }
+.ft-col h5 { font-size: .7rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: rgba(246,243,238,.3); margin-bottom: 1.25rem; }
+.ft-col a { display: block; font-size: .8rem; color: rgba(246,243,238,.5); text-decoration: none; margin-bottom: .6rem; transition: color .2s; }
+.ft-col a:hover { color: var(--ivory); }
+.ft-bottom { border-top: 1px solid rgba(255,255,255,.06); padding-top: 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+.ft-copy { font-size: .72rem; color: rgba(246,243,238,.25); }
+.ft-legal { display: flex; gap: 2rem; }
+.ft-legal a { font-size: .72rem; color: rgba(246,243,238,.25); text-decoration: none; transition: color .2s; }
+.ft-legal a:hover { color: rgba(246,243,238,.5); }
+
+/* ─── REVEAL ──────────────────────────────────────────── */
+.r { opacity: 0; transform: translateY(28px); transition: opacity .8s ease, transform .8s ease; }
+.r.v { opacity: 1; transform: none; }
+.r.d1 { transition-delay: .1s; } .r.d2 { transition-delay: .2s; } .r.d3 { transition-delay: .3s; }
+
+/* ─── ANIMATIONS ──────────────────────────────────────── */
+@keyframes riseIn { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
+@keyframes livePulse { 0%,100% { opacity: 1; } 50% { opacity: .3; } }
+@keyframes fadeSlide { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: none; } }
+
+/* ─── RESPONSIVE ──────────────────────────────────────── */
+@media (max-width: 1200px) {
+  .services-list { grid-template-columns: repeat(2, 1fr); }
+  /* pc-carousel responsive */
+  .how-inner { grid-template-columns: 1fr; gap: 4rem; }
+  .faq-wrap { grid-template-columns: 1fr; gap: 3rem; }
+  .faq-hl { position: static; }
+  .ft { grid-template-columns: 1fr 1fr; gap: 2.5rem; }
+}
+@media (max-width: 900px) {
+  nav { padding: 1.25rem 1.5rem; }
+  nav.opaque { padding: 1rem 1.5rem; }
+  .nav-links { display: none; }
+  .hero { padding: 0 1.5rem 0; }
+  section, .setup-section, .ongoing-section, .pricing-section, .trust-section, .faq-section, .businesses, .how-section, .testimonials-section { padding: 5rem 1.5rem; }
+  .cinematic-problem { padding: 5rem 1.5rem; min-height: auto; }
+  .cp-inner, .setup-intro, .ongoing-inner, .trust-inner { grid-template-columns: 1fr; gap: 3rem; }
+  .biz-head { padding: 0 1.5rem; flex-direction: column; align-items: flex-start; gap: 1rem; }
+  .biz-track { padding: 0 1.5rem; }
+  .biz-scroll-hint { padding-left: 1.5rem; }
+  .stat-strip { grid-template-columns: 1fr 1fr; }
+  .final-cta { padding: 6rem 1.5rem; }
+  .ft { grid-template-columns: 1fr; gap: 2rem; }
+}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="cur-o"></div>
+<div id="progress"></div>
+
+<!-- ═══ NAV ═══ -->
+<nav id="nav">
+  <a href="#" class="nav-logo">Vistaar<span>.</span></a>
+  <div class="nav-links">
+    <a href="#businesses">Businesses</a>
+    <a href="#services">Services</a>
+    <a href="#how">Process</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#contact" class="nav-pill">Book Free Call</a>
+  </div>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero" id="home">
+  <div class="hero-bg-circle"></div>
+
+  <div class="hero-center">
+    <div class="hero-eyebrow">
+      <span class="hero-eyebrow-line"></span>
+      Business Enablement for Indians Abroad
+    </div>
+
+    <h1 class="hero-hl">
+      You built a life<br/>
+      <span class="hl-muted">somewhere else.</span><br/>
+      Build a business<br/>
+      <em>back home.</em>
+    </h1>
+
+    <p class="hero-sub">
+      Vistaar is the only platform that takes your business idea in India from zero to open — and then keeps it running — while you live your life abroad.
+    </p>
+
+    <div class="hero-actions">
+      <a href="#contact" class="btn-ember">Book Free Consultation</a>
+      <a href="#how" class="btn-ghost">See how it works <span class="arr">→</span></a>
+    </div>
+  </div>
+
+  <!-- Persona switcher — the "built for me" moment -->
+  <div class="persona-bar" id="persona-bar">
+    <div class="persona-tab active" data-msg="Earning in dollars, investing in rupees. We handle the paperwork, the people, and the P&L — so you can focus on your FAANG career.">
+      <div class="pt-flag">🇺🇸</div>
+      <div class="pt-label">Silicon Valley</div>
+      <div class="pt-loc">US-based NRI</div>
+      <div class="pt-msg"></div>
+    </div>
+    <div class="persona-tab" data-msg="Short tenure, big savings. Build something real before you return. We'll have it running profitably before your visa expires.">
+      <div class="pt-flag">🇦🇪</div>
+      <div class="pt-label">Gulf Professional</div>
+      <div class="pt-loc">UAE / KSA-based NRI</div>
+      <div class="pt-msg"></div>
+    </div>
+    <div class="persona-tab" data-msg="You carry India in your identity. Let us help you put roots down — a business that serves your family's city and builds your family's wealth.">
+      <div class="pt-flag">🇬🇧</div>
+      <div class="pt-label">British Indian</div>
+      <div class="pt-loc">UK-based NRI</div>
+      <div class="pt-msg"></div>
+    </div>
+    <div class="persona-tab" data-msg="The time difference is real. The trust challenge is real. We put someone physically in your city, accountable to you, so distance stops being a barrier.">
+      <div class="pt-flag">🇨🇦</div>
+      <div class="pt-label">Canadian NRI</div>
+      <div class="pt-loc">Canada-based NRI</div>
+      <div class="pt-msg"></div>
+    </div>
+    <div class="persona-tab" data-msg="Australia's growth story is impressive. But India's is breathtaking. We'll show you exactly where your capital can generate life-changing returns at home.">
+      <div class="pt-flag">🇦🇺</div>
+      <div class="pt-label">Aussie Indian</div>
+      <div class="pt-loc">Australia-based NRI</div>
+      <div class="pt-msg"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ STAT STRIP ═══ -->
+<div class="stat-strip">
+  <div class="stat-cell r">
+    <div class="sc-num">₹2.3<sup>L Cr</sup></div>
+    <div class="sc-label">NRI remittances to India<br/>in FY2024</div>
+  </div>
+  <div class="stat-cell r d1">
+    <div class="sc-num">18M<sup>+</sup></div>
+    <div class="sc-label">Indians living outside<br/>India today</div>
+  </div>
+  <div class="stat-cell r d2">
+    <div class="sc-num">90</div>
+    <div class="sc-label">Days from first call<br/>to grand opening</div>
+  </div>
+  <div class="stat-cell r d3">
+    <div class="sc-num">1<sup>in</sup>3</div>
+    <div class="sc-label">NRI ventures fail within 2 years<br/>without on-ground management</div>
+  </div>
+</div>
+
+<!-- ═══ PROBLEM ═══ -->
+<section class="cinematic-problem">
+  <div class="cp-bg-text">INDIA</div>
+  <div class="cp-inner">
+    <div class="cp-left r">
+      <div class="section-tag">The NRI Reality</div>
+      <h2 class="cp-hl">The dream is easy.<br/>The <em>execution</em><br/>is where it fails.</h2>
+      <div class="cp-quote r d1">
+        <blockquote>"I put ₹80 lakhs into a restaurant in Pune. Within 8 months, the manager was siphoning cash and we had no idea until it was too late."</blockquote>
+        <div class="cp-quote-author">Rahul K. — Software Engineer, San Jose CA</div>
+      </div>
+    </div>
+    <div class="cp-right r d2">
+      <div class="pain-item">
+        <div class="pain-num">01</div>
+        <div>
+          <div class="pain-title">Regulatory Maze</div>
+          <p class="pain-p">GST, FSSAI, Trade Licenses, Shops & Establishment — each state has different rules. Navigating this from Dubai or Toronto is nearly impossible without someone physically there.</p>
+        </div>
+      </div>
+      <div class="pain-item">
+        <div class="pain-num">02</div>
+        <div>
+          <div class="pain-title">The Trust Problem</div>
+          <p class="pain-p">Wrong hire. Unfair lease. Vendor overcharging. These are the silent killers of NRI businesses — because you can't be there to catch them.</p>
+        </div>
+      </div>
+      <div class="pain-item">
+        <div class="pain-num">03</div>
+        <div>
+          <div class="pain-title">Zero Visibility</div>
+          <p class="pain-p">Most NRI-owned businesses run on blind faith. No dashboards, no reports, no real-time data — just WhatsApp updates that may or may not be true.</p>
+        </div>
+      </div>
+      <div class="pain-item">
+        <div class="pain-num">04</div>
+        <div>
+          <div class="pain-title">Time-Zone Exhaustion</div>
+          <p class="pain-p">Managing vendor disputes or reviewing accounts across a 5-hour time difference while holding down a full-time job abroad is unsustainable.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ BUSINESSES ═══ -->
+<section class="businesses" id="businesses">
+  <div class="biz-head">
+    <div class="r">
+      <div class="section-tag">What We Set Up</div>
+      <h2 class="biz-hl">Businesses we know<br/><em>inside and out.</em></h2>
+    </div>
+    <p class="biz-sub r d1">Proven, cash-flow positive categories that serve real communities, hold their value, and can be managed remotely without reinventing the wheel.</p>
+  </div>
+
+  <div class="biz-track-wrap">
+    <div class="biz-track" id="biz-track">
+
+      <div class="biz-card">
+        <div class="bc-top"><div class="bc-icon">✂️</div><span class="bc-badge easy">Entry Friendly</span></div>
+        <div class="bc-name">Salons & Spas</div>
+        <p class="bc-desc">Unisex salons, beauty studios, and wellness spas remain among India's most resilient businesses — demand is hyper-local and recession-resistant.</p>
+        <div class="bc-metrics">
+          <div><span class="bc-m-val">₹15–40L</span><span class="bc-m-label">Setup Cost</span></div>
+          <div><span class="bc-m-val">18–24mo</span><span class="bc-m-label">Break-even</span></div>
+        </div>
+        <div class="bc-tech">
+          <div class="bc-tech-label">Tech We Add</div>
+          <span class="bc-tag">📱 WhatsApp & app online booking</span>
+          <span class="bc-tag">⭐ Automated Google review prompts</span>
+          <span class="bc-tag">💳 Digital loyalty & memberships</span>
+        </div>
+      </div>
+
+      <div class="biz-card">
+        <div class="bc-top"><div class="bc-icon">🏋️</div><span class="bc-badge easy">Entry Friendly</span></div>
+        <div class="bc-name">Gym & Fitness Centre</div>
+        <p class="bc-desc">India's fitness market is growing at 20%+ annually. A well-located gym with a solid membership model turns profitable within 2 years on a lean team.</p>
+        <div class="bc-metrics">
+          <div><span class="bc-m-val">₹30–80L</span><span class="bc-m-label">Setup Cost</span></div>
+          <div><span class="bc-m-val">20–30mo</span><span class="bc-m-label">Break-even</span></div>
+        </div>
+        <div class="bc-tech">
+          <div class="bc-tech-label">Tech We Add</div>
+          <span class="bc-tag">🔑 Biometric member & staff attendance</span>
+          <span class="bc-tag">📲 Membership management software</span>
+          <span class="bc-tag">📊 Revenue-per-member dashboard</span>
+        </div>
+      </div>
+
+      <div class="biz-card">
+        <div class="bc-top"><div class="bc-icon">🍽️</div><span class="bc-badge med">Moderate</span></div>
+        <div class="bc-name">Restaurant & Cloud Kitchen</div>
+        <p class="bc-desc">F&B is our most-requested category. From a QSR to a full restaurant — or a delivery-only cloud kitchen on Swiggy and Zomato. We've done the compliance maze.</p>
+        <div class="bc-metrics">
+          <div><span class="bc-m-val">₹20L–1.5Cr</span><span class="bc-m-label">Setup Cost</span></div>
+          <div><span class="bc-m-val">24–36mo</span><span class="bc-m-label">Break-even</span></div>
+        </div>
+        <div class="bc-tech">
+          <div class="bc-tech-label">Tech We Add</div>
+          <span class="bc-tag">🖥️ Petpooja / UrbanPiper POS</span>
+          <span class="bc-tag">📦 Swiggy & Zomato onboarding & menu optimisation</span>
+          <span class="bc-tag">📉 Food cost & wastage tracking</span>
+        </div>
+      </div>
+
+      <div class="biz-card">
+        <div class="bc-top"><div class="bc-icon">🚗</div><span class="bc-badge med">Moderate</span></div>
+        <div class="bc-name">Automobile Showroom</div>
+        <p class="bc-desc">Two-wheeler and used car dealerships are booming across Tier 2 India. High ticket value, low SKU count, strong manufacturer support.</p>
+        <div class="bc-metrics">
+          <div><span class="bc-m-val">₹50L–3Cr</span><span class="bc-m-label">Setup Cost</span></div>
+          <div><span class="bc-m-val">24–48mo</span><span class="bc-m-label">Break-even</span></div>
+        </div>
+        <div class="bc-tech">
+          <div class="bc-tech-label">Tech We Add</div>
+          <span class="bc-tag">🔎 Lead tracking DMS CRM</span>
+          <span class="bc-tag">📋 Digital test-drive & loan forms</span>
+          <span class="bc-tag">📅 Service reminder SMS/WhatsApp automation</span>
+        </div>
+      </div>
+
+      <div class="biz-card">
+        <div class="bc-top"><div class="bc-icon">💊</div><span class="bc-badge med">Moderate</span></div>
+        <div class="bc-name">Pharmacy & Medical Store</div>
+        <p class="bc-desc">One of the most stable, inflation-proof businesses in India. A licensed pharmacy in a residential area generates consistent, predictable revenue.</p>
+        <div class="bc-metrics">
+          <div><span class="bc-m-val">₹8–25L</span><span class="bc-m-label">Setup Cost</span></div>
+          <div><span class="bc-m-val">12–18mo</span><span class="bc-m-label">Break-even</span></div>
+        </div>
+        <div class="bc-tech">
+          <div class="bc-tech-label">Tech We Add</div>
+          <span class="bc-tag">📲 Prescription upload via WhatsApp</span>
+          <span class="bc-tag">🏷️ PharmEasy / 1mg integration</span>
+          <span class="bc-tag">⚠️ Expiry-date inventory alert system</span>
+        </div>
+      </div>
+
+      <div class="biz-card">
+        <div class="bc-top"><div class="bc-icon">🛒</div><span class="bc-badge easy">Entry Friendly</span></div>
+        <div class="bc-name">Grocery & Kirana Superstore</div>
+        <p class="bc-desc">Modern neighbourhood grocery stores are winning against quick-commerce in Tier 2 and 3 cities. High frequency, loyal base, franchise options available.</p>
+        <div class="bc-metrics">
+          <div><span class="bc-m-val">₹12–50L</span><span class="bc-m-label">Setup Cost</span></div>
+          <div><span class="bc-m-val">15–24mo</span><span class="bc-m-label">Break-even</span></div>
+        </div>
+        <div class="bc-tech">
+          <div class="bc-tech-label">Tech We Add</div>
+          <span class="bc-tag">📦 Inventory & reorder automation</span>
+          <span class="bc-tag">🏠 Hyperlocal delivery via Dunzo / Instamart</span>
+          <span class="bc-tag">💬 WhatsApp ordering for regulars</span>
+        </div>
+      </div>
+
+      <div class="biz-card">
+        <div class="bc-top"><div class="bc-icon">🌾</div><span class="bc-badge high">Capital Intensive</span></div>
+        <div class="bc-name">Agri-Farm & Organic Produce</div>
+        <p class="bc-desc">Managed organic farming — from polyhouse cultivation to heritage land development. Popular among NRIs with ancestral property or connection to roots.</p>
+        <div class="bc-metrics">
+          <div><span class="bc-m-val">₹25L–2Cr</span><span class="bc-m-label">Setup Cost</span></div>
+          <div><span class="bc-m-val">36–60mo</span><span class="bc-m-label">Break-even</span></div>
+        </div>
+        <div class="bc-tech">
+          <div class="bc-tech-label">Tech We Add</div>
+          <span class="bc-tag">🌡️ IoT soil sensors & drip irrigation automation</span>
+          <span class="bc-tag">📷 CCTV & drone remote monitoring</span>
+          <span class="bc-tag">🛒 Direct-to-consumer organic tie-ups</span>
+        </div>
+      </div>
+
+      <div class="biz-card">
+        <div class="bc-top"><div class="bc-icon">👕</div><span class="bc-badge easy">Entry Friendly</span></div>
+        <div class="bc-name">Laundry & Dry Cleaning</div>
+        <p class="bc-desc">Urban India's working professionals have created white-hot demand for professional laundry. Low-drama, low-staff, and highly automatable.</p>
+        <div class="bc-metrics">
+          <div><span class="bc-m-val">₹10–30L</span><span class="bc-m-label">Setup Cost</span></div>
+          <div><span class="bc-m-val">12–20mo</span><span class="bc-m-label">Break-even</span></div>
+        </div>
+        <div class="bc-tech">
+          <div class="bc-tech-label">Tech We Add</div>
+          <span class="bc-tag">📲 Pickup & delivery scheduling</span>
+          <span class="bc-tag">🔔 Order-ready SMS notifications</span>
+          <span class="bc-tag">💧 Wash cycle quality monitoring</span>
+        </div>
+      </div>
+
+      <div class="biz-card">
+        <div class="bc-top"><div class="bc-icon">🩺</div><span class="bc-badge med">Moderate</span></div>
+        <div class="bc-name">Diagnostics & Path Lab</div>
+        <p class="bc-desc">Franchise tie-ups with Metropolis or Dr Lal Pathlabs dramatically de-risk this category. Consistent footfall, insurance tie-ups, high repeat rate.</p>
+        <div class="bc-metrics">
+          <div><span class="bc-m-val">₹20–80L</span><span class="bc-m-label">Setup Cost</span></div>
+          <div><span class="bc-m-val">18–30mo</span><span class="bc-m-label">Break-even</span></div>
+        </div>
+        <div class="bc-tech">
+          <div class="bc-tech-label">Tech We Add</div>
+          <span class="bc-tag">📱 Online report delivery & patient portal</span>
+          <span class="bc-tag">🏠 Home sample collection booking</span>
+          <span class="bc-tag">📊 Practitioner referral dashboard</span>
+        </div>
+      </div>
+
+      <div class="biz-card">
+        <div class="bc-top"><div class="bc-icon">📚</div><span class="bc-badge easy">Entry Friendly</span></div>
+        <div class="bc-name">Coaching Centre & Preschool</div>
+        <p class="bc-desc">Education is India's most enduring middle-class aspiration. A coaching centre or CBSE preschool offers stable income and word-of-mouth growth in any residential locality.</p>
+        <div class="bc-metrics">
+          <div><span class="bc-m-val">₹5–30L</span><span class="bc-m-label">Setup Cost</span></div>
+          <div><span class="bc-m-val">12–18mo</span><span class="bc-m-label">Break-even</span></div>
+        </div>
+        <div class="bc-tech">
+          <div class="bc-tech-label">Tech We Add</div>
+          <span class="bc-tag">📹 CCTV parent-view portal</span>
+          <span class="bc-tag">📝 Fee collection & attendance app</span>
+          <span class="bc-tag">📢 WhatsApp parent broadcast</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="biz-scroll-hint r"><span>←</span> Drag to explore all 10 business categories <span>→</span></div>
+</section>
+
+<!-- ═══ SETUP SERVICES ═══ -->
+<section class="setup-section" id="services">
+  <div class="setup-intro">
+    <div class="r">
+      <div class="section-tag">Phase 01</div>
+      <h2 class="setup-hl">We build your<br/>business <em>from zero.</em></h2>
+    </div>
+    <div class="r d1">
+      <div class="setup-phase-label">ONE-TIME SETUP SERVICE</div>
+      <p class="setup-body">You make the decision. We handle every step between your idea and inauguration day — on the ground, accountable, and fully transparent. 90 days from first call to grand opening.</p>
+    </div>
+  </div>
+
+  <div class="services-list">
+    <div class="svc r"><div class="svc-num">01</div><div class="svc-icon">🧭</div><div class="svc-name">Business Consultation</div><p class="svc-p">Identify the right business type, structure, and city based on your capital, goals, and risk appetite.</p></div>
+    <div class="svc r d1"><div class="svc-num">02</div><div class="svc-icon">📍</div><div class="svc-name">Location Scouting & Lease</div><p class="svc-p">Our local team visits, evaluates, and shortlists properties. We negotiate leases and protect you from unfair clauses.</p></div>
+    <div class="svc r d2"><div class="svc-num">03</div><div class="svc-icon">⚖️</div><div class="svc-name">Full Legal Setup</div><p class="svc-p">GST, FSSAI, Trade Licenses, Shops & Establishment, Company registration — all handled end-to-end.</p></div>
+    <div class="svc r d3"><div class="svc-num">04</div><div class="svc-icon">👥</div><div class="svc-name">Hiring & Staffing</div><p class="svc-p">Source, background-verify, and onboard your initial team — managers, floor staff, cashiers — including contracts.</p></div>
+    <div class="svc r"><div class="svc-num">05</div><div class="svc-icon">🏪</div><div class="svc-name">Vendor & Inventory Setup</div><p class="svc-p">Identify primary vendors, negotiate credit terms, establish supplier agreements, and set up initial inventory.</p></div>
+    <div class="svc r d1"><div class="svc-num">06</div><div class="svc-icon">💻</div><div class="svc-name">POS & Tech Stack</div><p class="svc-p">Petpooja, Ginesys, Tally — configured, staff trained, owner dashboard live before opening day.</p></div>
+    <div class="svc r d2"><div class="svc-num">07</div><div class="svc-icon">📊</div><div class="svc-name">Owner Dashboard Setup</div><p class="svc-p">Real-time sales, inventory, and staff data — accessible from any device, any timezone, from Day 1.</p></div>
+    <div class="svc r d3"><div class="svc-num">08</div><div class="svc-icon">🎉</div><div class="svc-name">Grand Opening Support</div><p class="svc-p">Inauguration logistics, local PR, opening-day operations — so Day 1 looks professional and runs smoothly.</p></div>
+  </div>
+</section>
+
+<!-- ═══ ONGOING ═══ -->
+<section class="ongoing-section" id="ongoing">
+  <div class="ongoing-inner">
+    <div>
+      <div class="section-tag r">Phase 02</div>
+      <h2 class="setup-hl r" style="margin-top: .75rem; font-size: clamp(2.2rem,3.5vw,3.8rem);">We keep it <em>running</em><br/>after Day 1.</h2>
+      <p class="setup-body r d1" style="margin-top: 1.25rem;">Once you're live, Vistaar becomes your remote COO — monitoring performance, handling compliance, and keeping you fully informed from wherever you are in the world.</p>
+
+      <div class="ongoing-features">
+        <div class="of-item r">
+          <div class="of-icon">📊</div>
+          <div>
+            <div class="of-title">Monthly P&L Reporting</div>
+            <p class="of-p">Detailed profit & loss statements, revenue breakdown, expense tracking — delivered monthly, zero jargon, completely transparent.</p>
+          </div>
+        </div>
+        <div class="of-item r d1">
+          <div class="of-icon">👁️</div>
+          <div>
+            <div class="of-title">Staff Performance Monitoring</div>
+            <p class="of-p">Attendance tracking, shift adherence, sales per staff member, exception alerts — so you always know what's happening on the floor.</p>
+          </div>
+        </div>
+        <div class="of-item r d2">
+          <div class="of-icon">📅</div>
+          <div>
+            <div class="of-title">Compliance Calendar Management</div>
+            <p class="of-p">Never miss a GST filing, license renewal, or statutory deadline. We track, file, and alert — you just approve.</p>
+          </div>
+        </div>
+        <div class="of-item r d3">
+          <div class="of-icon">🎥</div>
+          <div>
+            <div class="of-title">Quarterly Business Reviews</div>
+            <p class="of-p">60-minute video call with your account manager — performance review, strategy discussion, and next-quarter planning.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dashboard mockup — Apple card style -->
+    <div class="dash-wrap r d2">
+      <div class="dash">
+        <div class="dash-topbar">
+          <span class="dash-tb-title">Vistaar Owner Dashboard</span>
+          <span class="dash-live"><span class="dash-live-dot"></span>Live</span>
+        </div>
+        <div class="dash-body">
+          <div class="dash-kpis">
+            <div class="dk">
+              <div class="dk-label">Today's Sales</div>
+              <div class="dk-val">₹28,450</div>
+              <div class="dk-delta up">↑ 12% vs last week</div>
+            </div>
+            <div class="dk">
+              <div class="dk-label">Staff Present</div>
+              <div class="dk-val">6/7</div>
+              <div class="dk-delta warn">1 on leave</div>
+            </div>
+            <div class="dk">
+              <div class="dk-label">Low Stock</div>
+              <div class="dk-val">3</div>
+              <div class="dk-delta down">items need reorder</div>
+            </div>
+          </div>
+
+          <div class="dash-chart">
+            <div class="dc-label">Revenue — Last 14 Days</div>
+            <svg class="dc-svg" viewBox="0 0 300 60" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="fillGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#C4622D" stop-opacity="0.15"/>
+                  <stop offset="100%" stop-color="#C4622D" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+              <path d="M0,45 L22,38 L44,50 L66,28 L88,35 L110,20 L132,30 L154,26 L176,32 L198,14 L220,22 L242,10 L264,16 L286,5 L300,8" fill="none" stroke="#C4622D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M0,45 L22,38 L44,50 L66,28 L88,35 L110,20 L132,30 L154,26 L176,32 L198,14 L220,22 L242,10 L264,16 L286,5 L300,8 L300,60 L0,60 Z" fill="url(#fillGrad)"/>
+            </svg>
+          </div>
+
+          <div class="dash-list">
+            <div class="dl-row"><span class="dl-key">GST Filing (Jan 2025)</span><span class="dl-pill ok">Filed ✓</span></div>
+            <div class="dl-row"><span class="dl-key">FSSAI Renewal</span><span class="dl-pill warn">Due in 18 days</span></div>
+            <div class="dl-row"><span class="dl-key">Monthly P&L Report</span><span class="dl-val">Ready to view →</span></div>
+            <div class="dl-row"><span class="dl-key">Next QBR Call</span><span class="dl-val">Feb 28, 3pm IST</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ HOW IT WORKS ═══ -->
+<section class="how-section" id="how">
+  <div class="how-inner">
+    <div>
+      <div class="section-tag r" style="color: var(--ember2);">Process</div>
+      <h2 class="how-hl r">From your first<br/>call to your<br/><em>first rupee earned.</em></h2>
+      <p class="how-sub r d1">A structured 90-day launch programme. Zero ambiguity. Every milestone documented with photos, receipts, and timestamped reports.</p>
+      <div class="how-guarantee r d2">
+        <div class="hg-title">🛡️ The Vistaar Guarantee</div>
+        <p class="hg-p">If we miss a compliance deadline while under our management subscription, we cover all penalties and fines — no asterisks. We're accountable because your business is on the line.</p>
+      </div>
+    </div>
+    <div class="phases">
+      <div class="phase r">
+        <div class="phase-col"><div class="ph-num">1</div><div class="ph-line"></div></div>
+        <div class="ph-content"><div class="ph-title">Discovery Call & Business Assessment</div><p class="ph-p">We understand your goals, capital, preferred business type, and target city. You receive a tailored feasibility brief within 72 hours.</p><div class="ph-tag">WEEK 1</div></div>
+      </div>
+      <div class="phase r d1">
+        <div class="phase-col"><div class="ph-num">2</div><div class="ph-line"></div></div>
+        <div class="ph-content"><div class="ph-title">Location Scouting & Legal Structuring</div><p class="ph-p">Our ground team shortlists 3–5 properties. Simultaneously, legal entity formation and licensing applications are initiated.</p><div class="ph-tag">WEEKS 2–4</div></div>
+      </div>
+      <div class="phase r d2">
+        <div class="phase-col"><div class="ph-num">3</div><div class="ph-line"></div></div>
+        <div class="ph-content"><div class="ph-title">Setup, Fit-Out & Staffing</div><p class="ph-p">Lease signed, registrations filed, vendors onboarded, POS installed, and your first team hired and trained.</p><div class="ph-tag">WEEKS 5–10</div></div>
+      </div>
+      <div class="phase r d3">
+        <div class="phase-col"><div class="ph-num">4</div><div class="ph-line"></div></div>
+        <div class="ph-content"><div class="ph-title">Grand Opening & Dashboard Go-Live</div><p class="ph-p">Your business opens. Your real-time dashboard goes live. You watch your first sale from any timezone.</p><div class="ph-tag">WEEK 12</div></div>
+      </div>
+      <div class="phase r">
+        <div class="phase-col"><div class="ph-num">5</div></div>
+        <div class="ph-content"><div class="ph-title">Ongoing Management Begins</div><p class="ph-p">Monthly reports, compliance tracking, staff monitoring, and quarterly calls become your new normal.</p><div class="ph-tag">MONTH 4 ONWARDS</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ TESTIMONIALS ═══ -->
+<section class="testimonials-section" id="testimonials">
+  <div class="ts-head r">
+    <div class="section-tag">What Clients Say</div>
+    <h2 class="ts-hl">Real people.<br/><em>Real businesses.</em></h2>
+  </div>
+  <div class="ts-slider">
+    <div class="ts-track">
+      <div class="ts-card active">
+        <div class="ts-quote">"Vistaar set up my cloud kitchen in Bengaluru in 11 weeks while I was in Dubai. I saw photos of every milestone. On Day 1, I watched the first Swiggy order come through on my dashboard — from my office in Business Bay."</div>
+        <div class="ts-footer">
+          <div class="ts-author-info">
+            <div class="ts-avatar">AK</div>
+            <div><div class="ts-name">Anil Kumar Menon</div><div class="ts-loc">Finance Professional · Dubai, UAE</div></div>
+          </div>
+          <div class="ts-stars">★★★★★</div>
+        </div>
+      </div>
+      <div class="ts-card">
+        <div class="ts-quote">"The compliance calendar alone is worth the subscription fee. I'd missed GST filings twice before joining Vistaar. In 18 months with them — zero misses, zero penalties. It's a weight completely off my mind."</div>
+        <div class="ts-footer">
+          <div class="ts-author-info">
+            <div class="ts-avatar">SP</div>
+            <div><div class="ts-name">Sunita Pillai</div><div class="ts-loc">NHS Doctor · London, UK</div></div>
+          </div>
+          <div class="ts-stars">★★★★★</div>
+        </div>
+      </div>
+      <div class="ts-card">
+        <div class="ts-quote">"I'm second-gen. My Hindi is functional at best. Vistaar handled every negotiation — the landlord, the vendors, the licensing office — and translated everything back to me. I felt completely in control despite being 8,000 miles away."</div>
+        <div class="ts-footer">
+          <div class="ts-author-info">
+            <div class="ts-avatar">KJ</div>
+            <div><div class="ts-name">Kavya Joshi</div><div class="ts-loc">UX Designer · Toronto, Canada</div></div>
+          </div>
+          <div class="ts-stars">★★★★★</div>
+        </div>
+      </div>
+      <div class="ts-card">
+        <div class="ts-quote">"Three salons in Hyderabad and Pune — all set up and running while I've been in Riyadh. The owner dashboard is the first thing I open every morning. It's like having eyes on the ground 24/7."</div>
+        <div class="ts-footer">
+          <div class="ts-author-info">
+            <div class="ts-avatar">RM</div>
+            <div><div class="ts-name">Ritu Mahajan</div><div class="ts-loc">Engineer · Riyadh, Saudi Arabia</div></div>
+          </div>
+          <div class="ts-stars">★★★★★</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="ts-controls">
+    <button class="ts-btn" id="ts-prev">←</button>
+    <button class="ts-btn" id="ts-next">→</button>
+    <div class="ts-dots">
+      <div class="ts-dot active" data-i="0"></div>
+      <div class="ts-dot" data-i="1"></div>
+      <div class="ts-dot" data-i="2"></div>
+      <div class="ts-dot" data-i="3"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PRICING ═══ -->
+<section class="pricing-section" id="pricing">
+  <div class="r">
+    <div class="section-tag">Pricing</div>
+    <h2 class="pricing-hl">Transparent pricing.<br/><em>No surprises.</em></h2>
+  </div>
+  <p class="pricing-sub r d1">All plans include a free 60-minute discovery call. Setup fees are one-time; subscriptions are billed monthly and can be paused with 30 days' notice.</p>
+
+  <div class="pc-carousel-wrap r d2">
+    <div class="pc-carousel" id="pc-carousel">
+
+      <div class="pc pc-slide">
+        <div class="pc-tier">Starter</div>
+        <div class="pc-name">Foundations</div>
+        <p class="pc-desc">For NRIs who need the legal groundwork done right but prefer to manage operations themselves.</p>
+        <div class="pc-price">
+          <span class="pc-from">One-time setup from</span>
+          <div><span class="pc-amt">₹1.8L</span></div>
+          <span class="pc-sub">+ ₹12,000/month subscription</span>
+        </div>
+        <ul class="pc-features">
+          <li>Business consultation & feasibility</li>
+          <li>Company registration (structure of choice)</li>
+          <li>GST + FSSAI + Trade License</li>
+          <li>Vendor identification support</li>
+          <li>POS & accounting setup</li>
+          <li>Monthly P&L reporting</li>
+          <li>Compliance calendar management</li>
+        </ul>
+        <a href="#contact" class="pc-cta outline">Get Started</a>
+      </div>
+
+      <div class="pc pc-slide featured">
+        <div class="pc-badge">Most Popular</div>
+        <div class="pc-tier">Complete</div>
+        <div class="pc-name">Full Launch</div>
+        <p class="pc-desc">End-to-end business-in-a-box. We do everything — you just approve at each milestone.</p>
+        <div class="pc-price">
+          <span class="pc-from">One-time setup from</span>
+          <div><span class="pc-amt">₹3.5L</span></div>
+          <span class="pc-sub">+ ₹22,000/month subscription</span>
+        </div>
+        <ul class="pc-features">
+          <li>Everything in Foundations, plus:</li>
+          <li>Location scouting & lease negotiation</li>
+          <li>Full hiring, background checks & contracts</li>
+          <li>Vendor onboarding & inventory setup</li>
+          <li>Grand opening support</li>
+          <li>Real-time owner dashboard</li>
+          <li>Staff performance monitoring</li>
+          <li>Quarterly video business reviews</li>
+          <li>Dedicated account manager</li>
+        </ul>
+        <a href="#contact" class="pc-cta solid">Get Started</a>
+      </div>
+
+      <div class="pc pc-slide">
+        <div class="pc-tier">Enterprise</div>
+        <div class="pc-name">Multi-Unit</div>
+        <p class="pc-desc">For NRIs with serious capital looking to launch and manage multiple outlets or a franchise model.</p>
+        <div class="pc-price">
+          <span class="pc-from">Custom pricing</span>
+          <div><span class="pc-amt" style="font-size:2rem;">Let's Talk</span></div>
+          <span class="pc-sub">Tailored to your portfolio</span>
+        </div>
+        <ul class="pc-features">
+          <li>Everything in Full Launch, plus:</li>
+          <li>Multi-city / multi-outlet management</li>
+          <li>Franchise evaluation & setup</li>
+          <li>Centralised reporting across all units</li>
+          <li>Dedicated on-ground operations lead</li>
+          <li>Custom SLA agreements</li>
+          <li>Priority 24hr response commitment</li>
+        </ul>
+        <a href="#contact" class="pc-cta outline">Request a Call</a>
+      </div>
+
+    </div>
+
+    <div class="pc-controls">
+      <button class="pc-btn" id="pc-prev">←</button>
+      <div class="pc-dots">
+        <span class="pc-dot active" data-i="0"></span>
+        <span class="pc-dot" data-i="1"></span>
+        <span class="pc-dot" data-i="2"></span>
+      </div>
+      <button class="pc-btn" id="pc-next">→</button>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ TRUST ═══ -->
+<section class="trust-section" id="trust">
+  <div class="trust-inner">
+    <div>
+      <div class="section-tag r">Why Vistaar</div>
+      <h2 class="trust-hl r">Built on<br/><em>earned trust.</em></h2>
+      <p class="trust-p r d1">Vistaar was built by professionals who've navigated Indian regulatory systems, run businesses on the ground, and worked with NRI clients across the US, UK, UAE, Canada, and Australia.</p>
+      <div class="creds">
+        <div class="cred r"><div class="cred-icon">🏛️</div><div class="cred-title">MCA Registered Entity</div><p class="cred-p">Incorporated under the Companies Act, 2013. Fully compliant and auditable.</p></div>
+        <div class="cred r d1"><div class="cred-icon">⚖️</div><div class="cred-title">Legal Partner Network</div><p class="cred-p">Empanelled CAs and lawyers across 15+ cities with deep FEMA & NRI investment expertise.</p></div>
+        <div class="cred r d2"><div class="cred-icon">🔒</div><div class="cred-title">Escrow-Protected Payments</div><p class="cred-p">Milestone payments held in escrow, released only upon client sign-off.</p></div>
+        <div class="cred r d3"><div class="cred-icon">📋</div><div class="cred-title">Full Milestone Reporting</div><p class="cred-p">Every action documented with photos, receipts, and timestamped reports. No black box.</p></div>
+      </div>
+    </div>
+    <div class="trust-right">
+      <div class="tr-item r">
+        <p class="tr-q">"Vistaar set up my cloud kitchen in Bengaluru in 11 weeks while I was in Dubai. On Day 1, I watched the first Swiggy order come in on my dashboard — from Business Bay."</p>
+        <div class="tr-who"><div class="tr-av">AK</div><div><div class="tr-n">Anil Kumar Menon</div><div class="tr-l">Finance · Dubai, UAE</div></div><div class="tr-stars">★★★★★</div></div>
+      </div>
+      <div class="tr-item r d1">
+        <p class="tr-q">"Zero missed filings in 18 months. The compliance calendar alone is worth every rupee of the subscription."</p>
+        <div class="tr-who"><div class="tr-av">SP</div><div><div class="tr-n">Sunita Pillai</div><div class="tr-l">NHS Doctor · London, UK</div></div><div class="tr-stars">★★★★★</div></div>
+      </div>
+      <div class="tr-item r d2">
+        <p class="tr-q">"Three salons running across two cities — all while I've been sitting in Riyadh. The dashboard is the first thing I open every morning."</p>
+        <div class="tr-who"><div class="tr-av">RM</div><div><div class="tr-n">Ritu Mahajan</div><div class="tr-l">Engineer · Riyadh, KSA</div></div><div class="tr-stars">★★★★★</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FAQ ═══ -->
+<section class="faq-section">
+  <div class="faq-wrap">
+    <div class="r">
+      <div class="section-tag">FAQ</div>
+      <h2 class="faq-hl">Questions every<br/><em>NRI asks.</em>
+        <p>Straight answers — no fine print, no hedging.</p>
+      </h2>
+    </div>
+    <div class="faqs r d1">
+      <div class="faq-it open">
+        <button class="fq" onclick="toggleFaq(this)">Can an NRI legally own a business in India?<span class="fq-ico">+</span></button>
+        <div class="fa">Yes. NRIs can own businesses in India under FEMA guidelines. Most sectors allow 100% NRI ownership under the automatic route. We guide you to the right structure — Pvt Ltd, LLP, OPC, or proprietorship — based on your sector and situation.</div>
+      </div>
+      <div class="faq-it">
+        <button class="fq" onclick="toggleFaq(this)">Do I need to visit India during setup?<span class="fq-ico">+</span></button>
+        <div class="fa">Not necessarily. Most clients complete the entire setup remotely — we handle site visits, document notarisation via apostille or Power of Attorney, and vendor meetings on your behalf. Many choose to come for the grand opening, which we coordinate.</div>
+      </div>
+      <div class="faq-it">
+        <button class="fq" onclick="toggleFaq(this)">How do I repatriate profits back to my country?<span class="fq-ico">+</span></button>
+        <div class="fa">Profits from NRI-owned businesses can be repatriated after paying applicable taxes in India, subject to FEMA regulations. Our empanelled CA partners handle Form 15CA/15CB and the banking compliance required for outward remittances.</div>
+      </div>
+      <div class="faq-it">
+        <button class="fq" onclick="toggleFaq(this)">What types of businesses can Vistaar set up?<span class="fq-ico">+</span></button>
+        <div class="fa">We have experience across F&B, retail, healthcare, education, and service businesses. We advise on sectors with strong NRI investment track records in your target city and evaluate new categories on a case-by-case basis.</div>
+      </div>
+      <div class="faq-it">
+        <button class="fq" onclick="toggleFaq(this)">What if my business isn't performing well?<span class="fq-ico">+</span></button>
+        <div class="fa">Our quarterly reviews are designed exactly for this. We don't just report data — we diagnose issues and recommend corrective actions: staffing changes, vendor renegotiations, marketing pushes, or structural pivots. We're invested in your success.</div>
+      </div>
+      <div class="faq-it">
+        <button class="fq" onclick="toggleFaq(this)">Can I cancel the subscription later?<span class="fq-ico">+</span></button>
+        <div class="fa">Absolutely. Cancel with 30 days' notice. We'll prepare a full handover package — all credentials, vendor contacts, staff files, compliance status, and an operational playbook — so you or a local partner can continue seamlessly.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FINAL CTA ═══ -->
+<section class="final-cta" id="contact">
+  <div class="fc-tag">Start Your Journey</div>
+  <h2 class="fc-hl r">Your business in India<br/>is <em>one call away.</em></h2>
+  <p class="fc-p r d1">Book a free 60-minute discovery call with a Vistaar advisor. No commitment, no hard-sell — just a clear picture of what's possible.</p>
+  <div class="fc-form r d2">
+    <input type="email" placeholder="Your email address" id="fc-email"/>
+    <button onclick="handleSubmit()">Book Free Call →</button>
+  </div>
+  <p class="fc-alt r d3">Or <a href="#">WhatsApp us</a> directly · +91 98765 43210 · Response within 24 hours</p>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div class="ft">
+    <div class="ft-brand">
+      <a href="#" class="nav-logo">Vistaar<span style="color:var(--ember)">.</span></a>
+      <p>India's first full-stack business enablement platform for the global NRI community.</p>
+    </div>
+    <div class="ft-col">
+      <h5>Services</h5>
+      <a href="#businesses">Our Businesses</a>
+      <a href="#services">Setup Services</a>
+      <a href="#ongoing">Ongoing Management</a>
+      <a href="#pricing">Pricing</a>
+    </div>
+    <div class="ft-col">
+      <h5>Company</h5>
+      <a href="#">About Us</a>
+      <a href="#">Our Team</a>
+      <a href="#">Partner With Us</a>
+      <a href="#">Careers</a>
+    </div>
+    <div class="ft-col">
+      <h5>Resources</h5>
+      <a href="#">NRI Investment Guide</a>
+      <a href="#">FAQ</a>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+    </div>
+  </div>
+  <div class="ft-bottom">
+    <div class="ft-copy">© 2025 Vistaar Business Solutions Pvt. Ltd. · CIN: U74999KA2025PTC12345</div>
+    <div class="ft-legal"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Cookies</a></div>
+  </div>
+</footer>
+
+<script>
+/* ── CURSOR ── */
+const cur = document.getElementById('cur'), curO = document.getElementById('cur-o');
+let mx=0,my=0,ox=0,oy=0;
+document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; cur.style.left=mx+'px'; cur.style.top=my+'px'; });
+(function anim(){ ox+=(mx-ox)*.13; oy+=(my-oy)*.13; curO.style.left=ox+'px'; curO.style.top=oy+'px'; requestAnimationFrame(anim); })();
+document.querySelectorAll('a,button,.biz-card,.svc,.pc,.of-item,.cred,.tr-item,.pain-item').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{ cur.style.width='16px'; cur.style.height='16px'; curO.style.width='48px'; curO.style.height='48px'; });
+  el.addEventListener('mouseleave',()=>{ cur.style.width='8px'; cur.style.height='8px'; curO.style.width='32px'; curO.style.height='32px'; });
+});
+
+/* ── PROGRESS BAR ── */
+const bar = document.getElementById('progress');
+window.addEventListener('scroll', ()=>{
+  const h = document.documentElement.scrollHeight - window.innerHeight;
+  bar.style.width = (window.scrollY/h*100)+'%';
+});
+
+/* ── NAV OPAQUE ── */
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', ()=> nav.classList.toggle('opaque', window.scrollY>60));
+
+/* ── PERSONA TABS ── */
+document.querySelectorAll('.persona-tab').forEach(tab => {
+  const msg = tab.querySelector('.pt-msg');
+  msg.textContent = tab.dataset.msg;
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.persona-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+  });
+});
+
+/* ── REVEAL ── */
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('v'); obs.unobserve(e.target); } });
+}, { threshold: 0.1 });
+document.querySelectorAll('.r').forEach(el => obs.observe(el));
+
+/* ── FAQ ── */
+function toggleFaq(btn) {
+  const item = btn.closest('.faq-it');
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-it.open').forEach(i => i.classList.remove('open'));
+  if(!isOpen) item.classList.add('open');
+}
+
+/* ── TESTIMONIALS ── */
+let tsIdx = 0;
+const cards = document.querySelectorAll('.ts-card');
+const dots = document.querySelectorAll('.ts-dot');
+function goTo(i) {
+  cards[tsIdx].classList.remove('active');
+  dots[tsIdx].classList.remove('active');
+  tsIdx = (i + cards.length) % cards.length;
+  cards[tsIdx].classList.add('active');
+  dots[tsIdx].classList.add('active');
+}
+document.getElementById('ts-prev').addEventListener('click', () => goTo(tsIdx-1));
+document.getElementById('ts-next').addEventListener('click', () => goTo(tsIdx+1));
+dots.forEach(d => d.addEventListener('click', () => goTo(+d.dataset.i)));
+setInterval(() => goTo(tsIdx+1), 6000);
+
+/* ── DRAG SCROLL ── */
+const track = document.getElementById('biz-track');
+let isDown=false, startX, scrollL;
+track.addEventListener('mousedown', e => { isDown=true; startX=e.pageX-track.offsetLeft; scrollL=track.scrollLeft; });
+track.addEventListener('mouseleave', () => isDown=false);
+track.addEventListener('mouseup', () => isDown=false);
+track.addEventListener('mousemove', e => {
+  if(!isDown) return; e.preventDefault();
+  const x = e.pageX-track.offsetLeft;
+  track.scrollLeft = scrollL-(x-startX)*1.2;
+});
+
+/* ── FORM ── */
+function handleSubmit() {
+  const inp = document.getElementById('fc-email');
+  const btn = inp.nextElementSibling;
+  if(inp.value && inp.value.includes('@')) {
+    btn.textContent = 'Booked ✓'; btn.style.background='#2a7d4f';
+    inp.value=''; setTimeout(()=>{ btn.textContent='Book Free Call →'; btn.style.background=''; }, 3500);
+  } else {
+    inp.style.outline='2px solid var(--ember2)';
+    setTimeout(()=>inp.style.outline='', 1500);
+  }
+}
+
+
+/* ── PRICING CAROUSEL ── */
+(function() {
+  var pcIdx = 0;
+  var pcSlides = document.querySelectorAll('.pc-slide');
+  var pcDots = document.querySelectorAll('.pc-dot');
+  var pcCarousel = document.getElementById('pc-carousel');
+  function pcGoTo(i) {
+    pcIdx = (i + pcSlides.length) % pcSlides.length;
+    var wrap = pcCarousel.parentElement;
+    var slideW = pcSlides[0].offsetWidth;
+    var offset = (wrap.offsetWidth - slideW) / 2;
+    pcCarousel.style.transform = 'translateX(' + (-pcIdx * slideW + offset) + 'px)';
+    pcDots.forEach(function(d, j) { d.classList.toggle('active', j === pcIdx); });
+  }
+  document.getElementById('pc-prev').addEventListener('click', function() { pcGoTo(pcIdx - 1); });
+  document.getElementById('pc-next').addEventListener('click', function() { pcGoTo(pcIdx + 1); });
+  pcDots.forEach(function(d) { d.addEventListener('click', function() { pcGoTo(+d.dataset.i); }); });
+  window.addEventListener('resize', function() { pcGoTo(pcIdx); });
+  // init on featured (index 1) after layout
+  setTimeout(function() { pcGoTo(1); }, 60);
+})();
+
+/* ── DASHBOARD BAR SHIMMER ── */
+// subtle SVG path variation
+setInterval(()=>{
+  const path = document.querySelector('.dc-svg path:first-of-type');
+  if(!path) return;
+  const pts = [[0,45],[22,38],[44,50],[66,28],[88,35],[110,20],[132,30],[154,26],[176,32],[198,14],[220,22],[242,10],[264,16],[286,5],[300,8]];
+  const varied = pts.map((p,i)=> i===0||i===pts.length-1 ? p : [p[0], Math.max(5, Math.min(55, p[1]+(Math.random()-.5)*6))]);
+  const d = 'M'+varied.map(p=>p.join(',')).join(' L');
+  path.setAttribute('d', d);
+}, 2800);
+</script>
+</body>
+</html>
