@@ -715,6 +715,53 @@ footer { background: var(--ink2); padding: 4rem 3.5rem 2rem; border-top: 1px sol
   .stat-strip { grid-template-columns: 1fr 1fr; }
   .final-cta { padding: 6rem 1.5rem; }
   .ft { grid-template-columns: 1fr; gap: 2rem; }
+  /* Testimonials: reset inner padding so card fills width */
+  .ts-head, .ts-slider, .ts-controls { padding-left: 0; padding-right: 0; }
+}
+
+/* ─── HERO GRID FIX (all sizes) ────────────────────────── */
+/* Prevent grid from auto-sizing column to content width   */
+.hero { grid-template-columns: minmax(0, 1fr); }
+
+/* ─── MOBILE ────────────────────────────────────────────── */
+@media (max-width: 600px) {
+  /* Hero: reduce font, constrain text */
+  .hero-hl { font-size: clamp(2rem, 11vw, 2.8rem); }
+  .hero-eyebrow { font-size: .6rem; letter-spacing: .08em; }
+  .hero-sub { max-width: 100%; font-size: .95rem; }
+
+  /* Hero CTA buttons: stack vertically */
+  .hero-actions {
+    flex-direction: column; align-items: stretch; gap: .75rem;
+  }
+  .hero-actions .btn-ember { text-align: center; }
+  .hero-actions .btn-ghost { justify-content: center; }
+
+  /* Persona tabs: horizontal scroll instead of cramming */
+  .persona-bar {
+    overflow-x: auto; -webkit-overflow-scrolling: touch;
+    padding-bottom: 1.25rem; scroll-snap-type: x mandatory;
+  }
+  .persona-tab {
+    flex: 0 0 130px; padding: 1rem .75rem;
+    scroll-snap-align: start;
+  }
+
+  /* Testimonials: give the card room */
+  .ts-card { padding: 2rem 1.25rem; }
+
+  /* Final CTA form: stack email + button */
+  .fc-form { flex-direction: column; border-radius: 16px; }
+  .fc-form input { border-radius: 16px 16px 0 0; padding: 1rem 1.25rem; }
+  .fc-form button {
+    border-radius: 0 0 16px 16px; padding: 1rem 1.25rem; white-space: normal;
+  }
+
+  /* Services grid: single column */
+  .services-list { grid-template-columns: 1fr !important; }
+
+  /* Stat strip: tighter padding */
+  .stat-cell { padding: 2rem 1.25rem; }
 }
 </style>
 </head>
